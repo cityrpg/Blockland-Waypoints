@@ -1,0 +1,5 @@
+id: 818
+icon: cog
+type: Server Mods
+title: Compass Mod
+version: 1
