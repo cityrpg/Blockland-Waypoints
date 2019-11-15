@@ -513,7 +513,7 @@ package CompassClient
 };
 
 ActivatePackage(CompassClient);
-$pi = 3.14159;
+$pi = 3.1415927;
 
 function Compass_Update()
 {
