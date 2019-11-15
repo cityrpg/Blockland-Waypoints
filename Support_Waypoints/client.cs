@@ -64,7 +64,7 @@ if(!$CompassInitiated)
 			canMinimize = "0";
 			canMaximize = "0";
 			minSize = "50 50";
-			closeCommand = "canvas.popDialog(CompassWaypointGUI);";	
+			closeCommand = "canvas.popDialog(CompassWaypointGUI);";
 
 			new GuiSwatchCtrl() {
 				profile = "GuiDefaultProfile";
@@ -90,7 +90,7 @@ if(!$CompassInitiated)
 				constantThumbHeight = "0";
 				childMargin = "0 0";
 				rowHeight = "40";
-				columnWidth = "30";	
+				columnWidth = "30";
 
 				new GuiTextListCtrl(CompassWaypointGUI_List) {
 					profile = "GuiTextListProfile";
@@ -204,7 +204,7 @@ if(!$CompassInitiated)
 		position = "0 0";
 		extent = "640 480";
 		minExtent = "8 2";
-		visible = "1";	
+		visible = "1";
 
 		new GuiWindowCtrl(CompassWaypointGUI_Add_Frame) {
 			profile = "GuiWindowProfile";
@@ -224,7 +224,7 @@ if(!$CompassInitiated)
 			canMaximize = "0";
 			minSize = "50 50";
 			closeCommand = "canvas.popDialog(CompassWaypointGUI_Add);";
-	
+
 			new GuiTextCtrl() {
 				profile = "GuiTextProfile";
 				horizSizing = "right";
@@ -234,7 +234,7 @@ if(!$CompassInitiated)
 				minExtent = "8 2";
 				visible = "1";
 				text = "Name";
-				maxLength = "255";	
+				maxLength = "255";
 			};
 			new GuiTextEditCtrl(CompassWaypointGUI_Add_Name) {
 				profile = "GuiTextEditProfile";
@@ -415,10 +415,12 @@ if(!$CompassInitiated)
 	$CompassInitiated = 1;
 	Compass_ExteriorInit();
 }
+
 function Compass_ExteriorInit()
 {
 	//This function is for other mods that want to do stuff with this.
 }
+
 package CompassClient
 {
 	function disconnect(%a)
@@ -433,6 +435,7 @@ package CompassClient
 		$TrackWaypoints = 1;
 		$CompassServer = 0;
 	}
+
 	function clientcmdchatmessage(%client,%a,%b,%taggedString,%pretag,%name,%posttag,%message,%i)
 	{
 		Parent::clientcmdchatmessage(%client,%a,%b,%taggedString,%pretag,%name,%posttag,%message,%i);
@@ -453,6 +456,7 @@ package CompassClient
 			$ClientAddPoint = 0;
 		}
 	}
+
 	function NMH_Type::send(%this)
 	{
 		%txt = %this.getValue();
@@ -507,19 +511,23 @@ package CompassClient
 		Parent::send(%this);
 	}
 };
+
 ActivatePackage(CompassClient);
 $pi = 3.14159;
+
 function Compass_Update()
 {
 	if(!isObject(serverconnection))
 	{
 		return;
 	}
+
 	if(!isobject(serverconnection.getcontrolobject()) || !$Compass::Show)
 	{
 		CompassH.setVisible(0);
 		return;
 	}
+
 	%r=serverconnection.getcontrolobject().gettransform();
 	%rx = getword(%r, 0);
 	%ry = getword(%r, 1);
@@ -531,11 +539,13 @@ function Compass_Update()
 	%compassNtxtsizex=16/2;
 	%compassNtxtsizey=36/2;
 	CompassH_N.resize((45 * mcos(%r + $pi * 1.5) + %compassposx ) - %compassNtxtsizex, (45 * msin(%r + $pi * 1.5) + %compassposy) - %compassNtxtsizey, 25, 36);
+
 	for(%i=1;%i<$TrackWaypoints;%i++)
 	{
 		%px = %rx - getword($TrackWaypoint[%i],1);
 		%py = %ry - getword($TrackWaypoint[%i],2);
 		%pdist = msqrt((%py * %py) + (%px * %px));
+
 		if(!isObject($TrackWaypointDot[%i]))
 		{
 			$TrackWaypointDot[%i] = new GuiTextCtrl() {
@@ -555,6 +565,7 @@ function Compass_Update()
 	}
 	$CompassUpdate = schedule(50,0,Compass_Update);
 }
+
 function Compass_Toggle(%x)
 {
 	if(%x)
@@ -571,6 +582,7 @@ function Compass_Toggle(%x)
 		}
 	}
 }
+
 function Compass_WaypointGui(%x)
 {
 	if(%x)
@@ -583,14 +595,18 @@ function Compass_WaypointGui(%x)
 		}
 	}
 }
+
 function clientcmdcom_addwaypoint(%str,%evented)
 {
 	%name = getword(%str,0);
+
 	if(strpos(%name,"+") != -1)
 	{
 		return;
 	}
+
 	%pos = getwords(%str,1);
+
 	for(%i=1;%i<$TrackWaypoints;%i++)
 	{
 		if(getword($TrackWaypoint[%i],0) $= %name)
@@ -603,6 +619,7 @@ function clientcmdcom_addwaypoint(%str,%evented)
 			%found = 1;
 		}
 	}
+
 	if(!%found)
 	{
 		$TrackWaypointClient[$TrackWaypoints] = $ClientAddPoint;
@@ -622,6 +639,7 @@ function clientcmdcom_addwaypoint(%str,%evented)
 		CompassH.add($TrackWaypointDot[$TrackWaypoints]);
 		$TrackWaypoints++;
 	}
+
 	if(CompassWaypointGUI.isAwake())
 	{
 		CompassWaypointGUI.refreshList();
@@ -641,6 +659,7 @@ function clientcmdcom_remwaypoint(%name,%evented)
 			CompassH.remove($TrackWaypointDot[%i]);
 			$TrackWaypointDot[%i].delete();
 		}
+
 		if(%found)
 		{
 			$TrackWaypoint[%i] = $TrackWaypoint[%i+1];
@@ -648,33 +667,39 @@ function clientcmdcom_remwaypoint(%name,%evented)
 			$TrackWaypointClient[%i] = $TrackWaypointClient[%i+1];
 		}
 	}
+
 	if(%found)
 	{
 		$TrackWaypoints--;
 	}
+
 	if(CompassWaypointGUI.isAwake())
 	{
 		CompassWaypointGUI.refreshList();
 	}
 }
+
 function CompassWaypointGUI::onWake(%gui)
 {
 	CompassWaypointGUI_Frame.position = getword(PlayGUI.extent,0) - (getword(CompassWaypointGUI_Frame.extent,0) + 72) SPC 12;
 	CompassWaypointGUI_Compass.setValue($Compass::Show);
 	CompassWaypointGUI.refreshList();
 }
+
 function CompassWaypointGUI_Add::onWake(%gui)
 {
 	%pos = CompassWaypointGUI_Frame.position;
 	CompassWaypointGUI_Add_Name.setValue("");
 	CompassWaypointGUI_Add_Frame.position = getWord(%pos,0) + 25 SPC getword(%pos,1) + 16;
 }
+
 function CompassWaypointGUI_File::onWake(%gui)
 {
 	%pos = CompassWaypointGUI_Frame.position;
 	CompassWaypointGUI_File_Filename.setValue("");
 	CompassWaypointGUI_File_Frame.position = getword(%pos,0) + 25 SPC getword(%pos,1) + 16;
 }
+
 function CompassWaypointGUI::refreshList(%gui)
 {
 	CompassWaypointGUI_List.clear();
@@ -697,10 +722,12 @@ function CompassWaypointGUI::refreshList(%gui)
 	CompassWaypointGUI_BTN_Remove.setActive(1);
 	CompassWaypointGUI_BTN_Update.setActive(1);
 }
+
 function CompassWaypointGUI::onSleep(%gui)
 {
 	%gui.setCompass();
 }
+
 function CompassWaypointGUI::setCompass(%gui)
 {
 	$Compass::Show = CompassWaypointGUI_Compass.getValue();
@@ -718,22 +745,27 @@ function CompassWaypointGUI::setCompass(%gui)
 function CompassWaypointGUI::setTracked(%gui)
 {
 	%id = CompassWaypointGUI_List.getSelectedID();
+
 	if(isObject($TrackWaypointDot[$TrackedPoint]))
 	{
 		$TrackWaypointDot[$TrackedPoint].setText("\c2.");
 	}
+
 	if(%id == 1)
 	{
 		return;
 	}
+
 	$TrackedPoint = %id - 1;
 	$TrackWaypointDot[%id - 1].setText("\c0.");
 }
+
 function CompassWaypointGUI::addWaypoint(%gui)
 {
 	canvas.pushDialog(CompassWaypointGUI_Add);
 	canvas.popDialog(CompassWaypointGUI);
 }
+
 function CompassWaypointGUI::updateWaypoint(%gui)
 {
 	%id = CompassWaypointGUI_List.getSelectedID() - 1;
@@ -751,21 +783,26 @@ function CompassWaypointGUI::updateWaypoint(%gui)
 	}
 	CompassWaypointGUI.refreshList();
 }
+
 function CompassWaypointGUI::removeWaypoint(%gui)
 {
 	%id = CompassWaypointGUI_List.getSelectedID() - 1;
+
 	if($TrackWaypointClient[%id])
 	{
 		clientcmdcom_remwaypoint(getword($TrackWaypoint[%id],0));
 	} else {
 		commandtoserver('com_remserverwaypoint',getword($TrackWaypoint[%id],0));
 	}
+
 	CompassWaypointGUI.refreshList();
 }
+
 function CompassWaypointGUI::addWaypointF(%gui,%name,%server)
 {
 	canvas.popDialog(CompassWaypointGUI_Add);
 	%name = strreplace(%name," ","-");
+
 	if(%server)
 	{
 		if($CompassServer)
@@ -786,6 +823,7 @@ function CompassWaypointGUI::addWaypointF(%gui,%name,%server)
 				}
 			}
 		}
+
 		$ClientAddPoint = 1;
 		%pos = ServerConnection.getControlObject().getTransform();
 		%x = getword(%pos,0);
@@ -795,11 +833,13 @@ function CompassWaypointGUI::addWaypointF(%gui,%name,%server)
 		canvas.pushDialog(CompassWaypointGUI);
 	}
 }
+
 function CompassWaypointGUI::saveLoad(%gui)
 {
 	canvas.popDialog(CompassWaypointGUI);
 	canvas.pushDialog(CompassWaypointGUI_File);
-}	
+}
+
 function CompassWaypointGUI::saveWaypoints(%gui,%filename)
 {
 	%filename = "config/client/WP/" @ filebase(%filename) @ ".txt";
@@ -820,10 +860,12 @@ function CompassWaypointGUI::saveWaypoints(%gui,%filename)
 	canvas.popDialog(CompassWaypointGUI_File);
 	canvas.pushDialog(CompassWaypointGUI);
 }
+
 function CompassWaypointGUI::loadWaypoints(%gui,%filename)
 {
 	%filename = "config/client/WP/" @ filebase(%filename) @ ".txt";
 	%FO = new FileObject();
+
 	if(%FO.openForRead(%filename))
 	{
 		for(%i=1;%i<$TrackWaypoints;%i++)
@@ -832,16 +874,20 @@ function CompassWaypointGUI::loadWaypoints(%gui,%filename)
 			$TrackWaypointDot[%i] = "";
 			$TrackWaypoint[%i] = "";
 		}
+
 		$TrackWaypoints = 1;
+
 		if($CompassServer)
 		{
 			commandtoserver('com_clearwaypoints');
 		}
+
 		while(!%FO.isEOF())
 		{
 			%line = %FO.readline();
 			%server = getword(%line,0);
 			%waypoint = getwords(%line,1);
+
 			if(!%server)
 			{
 				if($CompassServer)
@@ -854,13 +900,16 @@ function CompassWaypointGUI::loadWaypoints(%gui,%filename)
 				$ClientAddPoint = 0;
 			}
 		}
+
 		%FO.close();
 	}
+
 	%FO.delete();
+	
 	canvas.popDialog(CompassWaypointGUI_File);
 	canvas.pushDialog(CompassWaypointGUI);
 }
-			
+
 function clientcmdcom_ping(%x)
 {
 	echo("   " @ %x SPC "Compass - You have the power! Telling the server you have the power...");
