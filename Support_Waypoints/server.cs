@@ -10,18 +10,6 @@ function servercmdcom_pong(%c,%x)
 		}
 	}
 }
-function servercmdgetcompass(%client)
-{
-	if(%client.hasRTB)
-	{
-		messageclient(%client,'',"<a:rtb-1150>Click here to use RTB to download the compass.</a>");
-		messageclient(%client,'',"\c6You will have to restart Blockland to enable the script.");
-	} else {
-		messageclient(%client,'',"\c0You do not have RTB! <a:http://www.returntoblockland.com>www.returntoblockland.com</a>");
-		messageclient(%client,'',"\c6For the good of your gameplay experience, please download RTB.");
-		messageclient(%client,'',"\c6To download the compass, visit here: <a:http://returntoblockland.com/forums/download.php?cmd=viewFile&id=1150>Compass on RTB</a>");
-	}
-}
 package CompassServer
 {
 	function GameConnection::loadMission(%c,%a,%b,%d,%e,%f)
