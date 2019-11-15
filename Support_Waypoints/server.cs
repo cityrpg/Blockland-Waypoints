@@ -10,6 +10,7 @@ function servercmdcom_pong(%c,%x)
 		}
 	}
 }
+
 package CompassServer
 {
 	function GameConnection::loadMission(%c,%a,%b,%d,%e,%f)
@@ -19,7 +20,9 @@ package CompassServer
 		commandtoclient(%c,'com_ping',%c.confirmationNum);
 	}
 };
+
 ActivatePackage(CompassServer);
+
 function servercmdcom_addserverwaypoint(%c,%name)
 {
 	if(%c.isAdmin)
@@ -56,6 +59,7 @@ function servercmdcom_addserverwaypoint(%c,%name)
 		}
 	}
 }
+
 function servercmdcom_remserverwaypoint(%c,%name)
 {
 	if(%c.isAdmin)
@@ -82,6 +86,7 @@ function servercmdcom_remserverwaypoint(%c,%name)
 		}
 	}
 }
+
 function servercmdcom_clearwaypoints(%c)
 {
 	if(%c.isAdmin)
@@ -93,6 +98,7 @@ function servercmdcom_clearwaypoints(%c)
 		}
 	}
 }
+
 function servercmdcom_loadwaypoint(%c,%str)
 {
 	if(%c.isAdmin)
@@ -101,6 +107,7 @@ function servercmdcom_loadwaypoint(%c,%str)
 		$ServerWaypoints++;
 	}
 }
+
 //Events
 function fxDTSbrick::setWaypoint(%brick,%name,%bool,%client)
 {
@@ -137,4 +144,5 @@ function fxDTSbrick::setWaypoint(%brick,%name,%bool,%client)
 		commandtoclient(%client,'centerprint',"\c6A brick attempted to edit waypoints on your compass:\n\c0You do not seem to have the compass enabled.",3);
 	}
 }
+
 registerOutputEvent(fxDTSBrick,"setWaypoint","string 32 200\tbool",1);
