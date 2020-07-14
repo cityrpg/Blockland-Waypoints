@@ -515,7 +515,7 @@ package CompassClient
 	{
 		Parent::yaw(%yaw);
 
-		Compass_Update();
+		Compass_Update(1);
 	}
 };
 
@@ -523,7 +523,7 @@ DeactivatePackage(CompassClient);
 ActivatePackage(CompassClient);
 $pi = 3.1415927;
 
-function Compass_Update()
+function Compass_Update(%nosched)
 {
 	if(!isObject(serverconnection))
 	{
@@ -571,7 +571,11 @@ function Compass_Update()
 		}
 		$TrackWaypointDot[%i].resize((25 * mcos(matan(%py, %px) - %r + $pi) * (-1 * mpow(1.07, (%pdist * -0.2)) + 1) + %compassposx) - 4, (25 * msin(matan(%py, %px) - %r) * (-1 * mpow(1.07, (%pdist * -0.2)) + 1) + %compassposy) - 26, 25, 36);
 	}
-	$CompassUpdate = schedule(50,0,Compass_Update);
+
+	if(!%noSched)
+	{
+		$CompassUpdate = schedule(50,0,Compass_Update);
+	}
 }
 
 function Compass_Toggle(%x)
