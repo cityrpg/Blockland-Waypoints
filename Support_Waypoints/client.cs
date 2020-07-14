@@ -510,6 +510,13 @@ package CompassClient
 		}
 		Parent::send(%this);
 	}
+
+	function yaw(%yaw)
+	{
+		Parent::yaw(%yaw);
+
+		Compass_Update();
+	}
 };
 
 DeactivatePackage(CompassClient);
@@ -906,7 +913,7 @@ function CompassWaypointGUI::loadWaypoints(%gui,%filename)
 	}
 
 	%FO.delete();
-	
+
 	canvas.popDialog(CompassWaypointGUI_File);
 	canvas.pushDialog(CompassWaypointGUI);
 }
