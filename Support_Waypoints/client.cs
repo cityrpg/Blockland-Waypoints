@@ -512,6 +512,7 @@ package CompassClient
 	}
 };
 
+DeactivatePackage(CompassClient);
 ActivatePackage(CompassClient);
 $pi = 3.1415927;
 
